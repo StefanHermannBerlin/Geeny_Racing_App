@@ -1,44 +1,55 @@
 import processing.video.*;
 Movie movie;
 
+// settings
+String player1Name="Rachael Rosen";
+String player2Name="Rick Deckard";
+
+int lapsTotal=10;                   // number of maximal laps to go
+int maxHeartrate=150;               
+int minHeartrate=60;
+int minSpeed=50;
+
+int heartrateP1=90;
+int heartrateP2=90;
+
+int throttleP1=10;
+int throttleP2=10;
+
+// load the used fonts
 PFont highscoreFont36;
 PFont highscoreFont144;
 PFont firaRegular24;
 PFont firaRegular36;
+
+// the used images
 PImage[] images = new PImage[12];
 PImage[] assets = new PImage[3];
 PImage[] sekt = new PImage[3];
 PImage korken, highscoreList;
+PImage[] curves = new PImage[2];  // heartrate diagrams
+PImage curveBGR;                  // heartrate diagrams
+String[] curvesUrls = {"curveGreen.png", "curveRed.png"};
+String curveBGRUrl ="curveBackground.png";
 String[] imageUrls = {"Get ready to race.png", "Countdown.png", "Countdown Copy.png", "Countdown Copy 2.png", "Countdown Copy 3.png", "Countdown Copy 4.png", "Countdown Copy 5.png", "Race Screen.png", "Winner Screen.png", "Highscore Screen.png", "Highscore Screen Copy.png", "Animations.png"};
 String[] assetUrls = {"asset-jumpup.png", "asset-jumpdown.png", "asset-heart.png"};
 String[] sektUrls = {"Winner Screen Copy 2.png", "Winner Screen Copy 3.png", "Winner Screen Copy 4.png"};
 String highscoreURL = "Highscore List.png";
-
-String player1Name="Rachael Rosen";
-String player2Name="Rick Deckard";
-
-int player1NamePositionX;         // player screen animation helper variable
-int player2NamePositionX;         // player screen animation helper variable
-
 int assetNumber = 3;
 int sektNumber = 3;
 int imageNumber = 12;               // number of images 
 int currentImage=0;                 // the image what is displayed in this very moment
-int myState=10;                     // state machine (should be 10)
-long countdownTimer=0;              // countdown timer
-int lapsTotal=10;                   // number of maximal laps to go
-int maxHeartrate=150;
-int minHeartrate=60;
-int minSpeed=50;
 
+// styles
+int player1NamePositionX;         // player screen animation helper variable
+int player2NamePositionX;         // player screen animation helper variable
+
+int myState=10;                     // state machine (should be 10)
 int speedP1=0;
 int speedP2=0;
-int throttleP1=10;
-int throttleP2=10;
 float heartrateIndicatorP1=0;
 float heartrateIndicatorP2=0;
-int heartrateP1=90;
-int heartrateP2=90;
+
 int currentLapP1=0;                 // lap counter Player 1
 int currentLapP2=0;                 // lap counter Player 2
 int[] heartratesP1 = new int[10];   // heartratesP1
@@ -52,6 +63,7 @@ long starttimeP2 = 0;               // storing the millis passed until start pla
 long lapStarttimeP1 = 0;            // storing the millis passed until start player 1
 long lapStarttimeP2 = 0;            // storing the millis passed until start player 2
 int winner=0;                       // winner 0 = no winner, winner 1 = player 1, winner 2 = player 2
+long countdownTimer=0;              // countdown timer
 long winnerScreenTimer=0;           // timer to show the winner screen
 int winnerScreenTimeout=4000;       // so long one should see the winner screen
 long highscoreScreenTimer=0;        // timer to show the highscore screen
@@ -62,13 +74,8 @@ int raceoverScreenTimeout=4000;
 int highscorePositionY=430;         // used to scroll the highscore up
 float scrollSpeed = 1.3f;           // scrollspeed
 
-// globals for heartrate diagrams
-PImage[] curves = new PImage[2];
-PImage curveBGR;
-String[] curvesUrls = {"curveGreen.png", "curveRed.png"};
-String curveBGRUrl ="curveBackground.png";
-float[] curvesPositions = new float[2];
-int curveNumber=2;
+float[] curvesPositions = new float[2];  // heartrate diagrams
+int curveNumber=2;                       // heartrate diagrams
 
 void setup() {
   fullScreen(2);
