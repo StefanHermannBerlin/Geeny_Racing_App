@@ -9,3 +9,4 @@ Controls
 ----------------------
 - Use Enter and Backspace to navigate
 - Use the Keys 1 and 2 to simulate round tracking sensors
+- Use mouse Y to simulate throttle, mouse X to simulate heart rates
