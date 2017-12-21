@@ -1,9 +1,29 @@
-import processing.video.*;
-Movie movie;
+// put new graphics in
+// clean up assets
+// names everywhere
+// load highscore
+// write to highscore
+// value jump in max speed player 1
+// get video running again
+
+
+//import processing.video.*;
+import processing.serial.*;         // serial library lets us talk to Arduino
+import controlP5.*;                 // library to create input fields for player names
+//Movie movie;
+ 
+ControlP5 cp5;                      // object containing text fields for player names 
+// state
+int myState=3;                     // state machine (should be 10)
+
+// serial variables
+int BPM1 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
+int BPM2 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
+Serial port;  // the serial port
 
 // settings
-String player1Name="Rachael Rosen";
-String player2Name="Rick Deckard";
+String player1Name="Rachael Rosen2";
+String player2Name="Rick Deckard2";
 
 int lapsTotal=10;                   // number of maximal laps to go
 int maxHeartrate=150;               
@@ -13,8 +33,8 @@ int minSpeed=50;
 int heartrateP1=90;
 int heartrateP2=90;
 
-int throttleP1=10;
-int throttleP2=10;
+int trottleP1=10;
+int trottleP2=10;
 
 // load the used fonts
 PFont highscoreFont36;
@@ -27,8 +47,8 @@ PImage[] images = new PImage[12];
 PImage[] assets = new PImage[3];
 PImage[] sekt = new PImage[3];
 PImage korken, highscoreList;
-PImage[] curves = new PImage[2];  // heartrate diagrams
-PImage curveBGR;                  // heartrate diagrams
+PImage[] curves = new PImage[2];   // heartrate diagrams
+PImage curveBGR;                   // heartrate diagrams
 String[] curvesUrls = {"curveGreen.png", "curveRed.png"};
 String curveBGRUrl ="curveBackground.png";
 String[] imageUrls = {"Get ready to race.png", "Countdown.png", "Countdown Copy.png", "Countdown Copy 2.png", "Countdown Copy 3.png", "Countdown Copy 4.png", "Countdown Copy 5.png", "Race Screen.png", "Winner Screen.png", "Highscore Screen.png", "Highscore Screen Copy.png", "Animations.png"};
@@ -41,10 +61,10 @@ int imageNumber = 12;               // number of images
 int currentImage=0;                 // the image what is displayed in this very moment
 
 // styles
-int player1NamePositionX;         // player screen animation helper variable
-int player2NamePositionX;         // player screen animation helper variable
+int player1NamePositionX;           // player screen animation helper variable
+int player2NamePositionX;           // player screen animation helper variable
+ 
 
-int myState=10;                     // state machine (should be 10)
 int speedP1=0;
 int speedP2=0;
 float heartrateIndicatorP1=0;
@@ -68,7 +88,7 @@ long winnerScreenTimer=0;           // timer to show the winner screen
 int winnerScreenTimeout=4000;       // so long one should see the winner screen
 long highscoreScreenTimer=0;        // timer to show the highscore screen
 int highscoreScreenTimeout1=4000;   // so long one should see the highscore screen without scrolling
-int highscoreScreenTimeout2=18000;   // so long one should see the highscore screen scrolling
+int highscoreScreenTimeout2=18000;  // so long one should see the highscore screen scrolling
 long raceoverScreenTimer=0;
 int raceoverScreenTimeout=4000;
 int highscorePositionY=430;         // used to scroll the highscore up
@@ -79,12 +99,23 @@ int curveNumber=2;                       // heartrate diagrams
 
 void setup() {
   fullScreen(2);
-  //size(1920, 1080);
+  // size(1920, 1080);
+  //size(960, 540);
+  //frame.setTitle("123 abc");
+  printArray(Serial.list()); // output available serial ports
+  port = new Serial(this, Serial.list()[7], 250000);
+
   // loading fonts
   highscoreFont36 = loadFont("HighscoreHero-36.vlw");
   highscoreFont144 = loadFont("HighscoreHero-144.vlw");
   firaRegular24 = loadFont("FiraSans-Regular-24.vlw");
   firaRegular36 = loadFont("FiraSans-Medium-36.vlw");
+
+
+  cp5 = new ControlP5(this);                                                                         // holds the input elements for player names
+  cp5.addTextfield("Player1").setPosition(20, 100).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 1
+  cp5.addTextfield("Player2").setPosition(20, 170).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 2
+  cp5.addBang("Submit").setPosition(240, 170).setSize(80, 40).hide();                                // submit button
 
   // loading images
   for (int i=0; i<imageNumber; i++) {
@@ -105,11 +136,11 @@ void setup() {
   curveBGR=loadImage(curveBGRUrl);
   highscoreList=loadImage(highscoreURL);
   korken=loadImage("korken.png");
-  
+
   // Load and play the video in a loop
   //movie = new Movie(this, "geenyAnimationK.mov");
-  movie = new Movie(this, "GeenyAnimationExample.mov");
-  movie.loop();
+  //  movie = new Movie(this, "GeenyAnimationExample.mov");
+  //  movie.loop();
 }
 
 void draw() {
@@ -118,22 +149,25 @@ void draw() {
   case -1:
     player1NamePositionX=1000;         // player screen animation helper variable
     player2NamePositionX=1000;         // player screen animation helper variable
+    cp5.get(Textfield.class, "Player1").setVisible(false);
+    cp5.get(Textfield.class, "Player2").setVisible(false);
+    cp5.get(Bang.class, "Submit").hide();
     myState=0;
-  break;
+    break;
 
-  case 0: // player screen
+  case 0: // player screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** 
     image(images[0], 0, 0);
     textAlign(LEFT);
     fill(255);
     noStroke();
     textFont(highscoreFont144);
     if (true) {
-     if (player1NamePositionX>0) player1NamePositionX-=30;
-     if (player2NamePositionX>0) player2NamePositionX-=30;
+      if (player1NamePositionX>0) player1NamePositionX-=30;
+      if (player2NamePositionX>0) player2NamePositionX-=30;
     }
-    text(player1Name, 132+player1NamePositionX, 509);
+    text(player1Name, 142+player1NamePositionX, 442);
     textAlign(RIGHT);
-    text(player2Name, 1825-player2NamePositionX, 825);
+    text(player2Name, 1865-player2NamePositionX, 830);
     //mouseHelper();
     break;
   case 1: // setting stage for countdown
@@ -217,6 +251,25 @@ void draw() {
     geenyAnimationUpdate();
     geenyAnimationDraw();
     resetData();
+    break;
+  case 11: // enter player 1 name
+    background(0);
+    cp5.get(Textfield.class, "Player1").setVisible(true);
+    cp5.get(Textfield.class, "Player2").setVisible(true);
+    cp5.get(Bang.class, "Submit").show();
+    break;
+  case 12: // enter player 2 name
+    cp5.get(Textfield.class, "Player1").setVisible(false);
+    cp5.get(Textfield.class, "Player2").setVisible(false);    
+    cp5.get(Bang.class, "Submit").hide();
+    myState++;
+    background(0);
+    break;
+  case 13:
+    background(0);
+    text(player1Name, 100, 109);
+    text(player2Name, 100, 225);
+    break;
   }
 }
 
@@ -229,20 +282,24 @@ void mouseHelper() {
 }
 
 void mousePressed() {
-  print("X= ");
-  print(mouseX);
-  print("\tY= ");
-  println(mouseY);
+ print("X= ");
+ print(mouseX);
+ print("\tY= ");
+ println(mouseY);
 }
 
 void keyPressed() {
+  //println(key);
   if (key == ENTER) {
     if (myState==0) myState=1;
-    if (myState==7) myState=-1;
-    if (myState==9) myState=-1;
-    if (myState==10) myState=-1;
+    else if (myState==7) myState=-1;
+    else if (myState==9) myState=-1;
+    else if (myState==10) myState=-1;
+    //else if (myState==11) myState=12; // player textfields
+    else if (myState==13) myState=-1;  // show both player names
   } else if (key == BACKSPACE) {
     if (myState==1) myState=-1;
+    else if (myState==13) myState=11; // player 2 textfield go back
   }
 
   if ((keyCode == 49)&&((myState==3)||(myState==4))) {                         // when key 1 is pressed, car 1 passed the counter   
@@ -284,6 +341,16 @@ void resetData() {
   currentLapP2=0;
 }
 
-void movieEvent(Movie m) {
-  m.read();
+/*void movieEvent(Movie m) {
+ m.read();
+ }*/
+
+void Submit() {
+  print("the following text was submitted :");
+  player1Name = cp5.get(Textfield.class,"Player1").getText();
+  player2Name = cp5.get(Textfield.class,"Player2").getText();
+  print(" textInput 1 = " + player1Name);
+  print(" textInput 2 = " + player2Name);
+  println();
+  myState=12;
 }

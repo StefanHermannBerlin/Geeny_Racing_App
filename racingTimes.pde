@@ -1,5 +1,8 @@
 void heartbeatSimulator() {
-  if (millis()%100>0) curvesPositions[0]+=heartrateP1/35f;
+  if (millis()%100>0) {
+    curvesPositions[0]+=heartrateP1/16f;
+    curvesPositions[1]+=heartrateP2/16f;
+  }
   //curvesPositions;
   if (curvesPositions[0]>328) curvesPositions[0]=0;
   if (curvesPositions[1]>328) curvesPositions[1]=0;
@@ -16,6 +19,7 @@ void drawHeartrates() {
     image(curves[0], 60-curvesPositions[0], 232f);
     image(curves[0], 388-curvesPositions[0], 232f);
   }
+  
   if (heartrateP2>maxHeartrate) {
     image(curves[1], 1220-curvesPositions[1], 232f);
     image(curves[1], 1548-curvesPositions[1], 232f);
@@ -26,8 +30,8 @@ void drawHeartrates() {
 }
 
 void valueSimulator() {
-  heartrateP1=int(map(mouseX, 0, 1920, 0, 240));
-  heartrateP2=130;
+  /*heartrateP1=BPM1;//int(map(mouseX, 0, 1920, 0, 240));
+  heartrateP2=130;*/
 
   heartrateIndicatorP1=map(constrain(heartrateP1, minHeartrate, maxHeartrate), 0, 1920, 0, 1);
   heartrateIndicatorP2=map(constrain(heartrateP2, minHeartrate, maxHeartrate), 0, 1920, 0, 1);
@@ -35,8 +39,8 @@ void valueSimulator() {
   speedP1=int(minSpeed+map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 100-minSpeed));
   speedP2=int(minSpeed+map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 100-minSpeed));
 
-  throttleP1=int(map(mouseY, 0, 1080, 100, 0));
-  throttleP2=30;
+  /*throttleP1=int(map(mouseY, 0, 1080, 100, 0));
+  throttleP2=30;*/
 }
 
 void drawDiagrams() {
@@ -46,36 +50,36 @@ void drawDiagrams() {
   noFill();
   if (heartrateP1>maxHeartrate) stroke(249, 87, 103);
   else stroke(92, 219, 134);
-  arc(607, 308, 162, 162, PI/2, PI/2+(PI*2)*(throttleP1/100f));
+  arc(580, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP1/100f));
 
   if (heartrateP2>maxHeartrate) stroke(249, 87, 103);
   else stroke(92, 219, 134);
-  arc(1770, 308, 162, 162, PI/2, PI/2+(PI*2)*(throttleP2/100f));
+  arc(1770, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP2/100f));
   noStroke();
 
 
   if (heartrateP1>maxHeartrate) fill(249, 87, 103);
   else fill(92, 219, 134);
-  rect(186, 437, map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 22);
-  rect(186, 473, map(speedP1, 0, 100, 0, 196), 22);
+  rect(182, 422, map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 22);
+  rect(182, 458, map(speedP1, 0, 100, 0, 196), 22);
 
   if (heartrateP2>maxHeartrate) fill(249, 87, 103);
   else fill(92, 219, 134);
-  rect(1346, 437, map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 22);
-  rect(1346, 473, map(speedP2, 0, 100, 0, 196), 22);
+  rect(1590, 422, map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 21);
+  rect(1590, 458, map(speedP2, 0, 100, 0, 196), 21);
 
   textAlign(LEFT);
   fill(255);
   textFont(firaRegular24);
-  text(heartrateP1, 403, 457);
-  text(int(speedP1), 403, 493);
-  text(heartrateP2, 1563, 457);
-  text(int(speedP2), 1563, 493);
+  text(heartrateP1, 405,442);
+  text(int(speedP1)+"%", 405,478);
+  text(heartrateP2, 1806, 442);
+  text(int(speedP2)+"%", 1806, 478);
 
   textAlign(RIGHT);
   textFont(firaRegular36);
-  text(int(throttleP1)+" %", 653, 320);
-  text(int(throttleP2)+" %", 1814, 320);
+  text(int(trottleP1)+"%", 602, 304);  // was 653, 320  -- -51   -16
+  text(int(trottleP2)+"%", 1814, 320);
 
   // show gimmicks for to high and to low heartrates
 
