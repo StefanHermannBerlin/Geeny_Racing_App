@@ -1,103 +1,79 @@
-void heartbeatSimulator() {
-  if (millis()%100>0) {
-    curvesPositions[0]+=heartrateP1/16f;
-    curvesPositions[1]+=heartrateP2/16f;
+void drawHeartrates() {                                                // drawing the heart curves
+  if (millis()%100>0) {                                                  // timer
+    curvesPositions[0]+=heartrateP1/16f;                                 // calculate later curve image position dependent on heartrate
+    curvesPositions[1]+=heartrateP2/16f;                                 // calculate later curve image position dependent on heartrate 
   }
-  //curvesPositions;
-  if (curvesPositions[0]>328) curvesPositions[0]=0;
-  if (curvesPositions[1]>328) curvesPositions[1]=0;
-  drawHeartrates();
-}
-
-void drawHeartrates() {
-  image(curveBGR, 60, 181);
-  image(curveBGR, 1081, 181);
-  if (heartrateP1>maxHeartrate) {
-    image(curves[1], 60-curvesPositions[0], 232f);
-    image(curves[1], 388-curvesPositions[0], 232f);
-  } else {
-    image(curves[0], 60-curvesPositions[0], 232f);
-    image(curves[0], 388-curvesPositions[0], 232f);
+  if (curvesPositions[0]>328) curvesPositions[0]=0;                      // if position out of range, flip to 0 
+  if (curvesPositions[1]>328) curvesPositions[1]=0;                      // if position out of range, flip to 0
+  image(curveBGR, 60, 181);                                              // drawing background image
+  image(curveBGR, 1393, 181);                                            // drawing background image
+  if (heartrateP1>maxHeartrate) {                                        // if heartrate ok, load normal color images
+    image(curves[1], 60-curvesPositions[0], 232f);                       // draw image
+    image(curves[1], 388-curvesPositions[0], 232f);                      // draw image to create a long image with several waves
+  } else {                                                               // if heartrate to high, load warning color images
+    image(curves[0], 60-curvesPositions[0], 232f);                       // draw image
+    image(curves[0], 388-curvesPositions[0], 232f);                      // draw image to create a long image with several waves
   }
-  
-  if (heartrateP2>maxHeartrate) {
-    image(curves[1], 1220-curvesPositions[1], 232f);
-    image(curves[1], 1548-curvesPositions[1], 232f);
-  } else {  
-    image(curves[0], 1220-curvesPositions[1], 232f);
-    image(curves[0], 1548-curvesPositions[1], 232f);
+  if (heartrateP2>maxHeartrate) {                                        // if heartrate ok, load normal color images
+    image(curves[1], 1220-curvesPositions[1], 232f);                     // draw image
+    image(curves[1], 1548-curvesPositions[1], 232f);                     // draw image to create a long image with several waves
+  } else {                                                               // if heartrate to high, load warning color images  
+    image(curves[0], 1470-curvesPositions[1], 232f);                     // draw image
+    image(curves[0], 1798-curvesPositions[1], 232f);                     // draw image to create a long image with several waves
   }
 }
 
-void valueSimulator() {
-  /*heartrateP1=BPM1;//int(map(mouseX, 0, 1920, 0, 240));
-  heartrateP2=130;*/
+void drawDiagrams() {                                                  // drawing diagrams of the racing screen
+  //                                                                   // draw trottle arcs
+  stroke(92, 219, 134);                                                  // formating
+  strokeWeight(20);                                                      // formating
+  strokeCap(PROJECT);                                                    // formating
+  noFill();                                                              // formating
+  if (heartrateP1>maxHeartrate) stroke(249, 87, 103);                    // set color
+  else stroke(92, 219, 134);                                             // if heartrate to high, change color 
+  arc(580, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP1/100f));           // draw arc for trottle
+  if (heartrateP2>maxHeartrate) stroke(249, 87, 103);                    // set color
+  else stroke(92, 219, 134);                                             // if heartrate to high, change color
+  arc(1339, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP2/100f));          // draw arc for trottle
+  noStroke();                                                            // formating
+  //                                                                   // draw trottle text 
+  textAlign(RIGHT);                                                      // formating
+  textFont(firaRegular36);                                               // formating
+  text(int(trottleP1)+"%", 614, 304);                                    // draw trottle % player 1
+  text(int(trottleP2)+"%", 1372, 304);                                   // draw trottle % player 2
+  //                                                                   // draw bar graphs heartrate and max speed
+  if (heartrateP1>maxHeartrate) fill(249, 87, 103);                      // set color
+  else fill(92, 219, 134);                                               // if heartrate to high, change color
+  rect(182, 422, map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 22);    // draw heartrate
+  rect(182, 458, map(maxSpeedP1, 0, 100, 0, 196), 22);                   // draw max speed
+  if (heartrateP2>maxHeartrate) fill(249, 87, 103);                      // set color
+  else fill(92, 219, 134);                                               // if heartrate to high, change color
+  rect(1590, 422, map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 21);    // draw heartrate
+  rect(1590, 458, map(maxSpeedP2, 0, 100, 0, 196), 21);                  // draw max speed
+  //                                                                   // draw text for bar graphs
+  textAlign(LEFT);                                                       // formating
+  fill(255);                                                             // formating
+  textFont(firaRegular24);                                               // formating
+  text(heartrateP1, 405, 442);                                           // output text heartrate player 1
+  text(int(maxSpeedP1)+"%", 405, 478);                                   // output text max speed player 1
+  text(heartrateP2, 1806, 442);                                          // output text heartrate player 2
+  text(int(maxSpeedP2)+"%", 1806, 478);                                  // output text max speed player 2
+  //                                                                   // show gimmicks for to high and to low heartrates
 
-  heartrateIndicatorP1=map(constrain(heartrateP1, minHeartrate, maxHeartrate), 0, 1920, 0, 1);
-  heartrateIndicatorP2=map(constrain(heartrateP2, minHeartrate, maxHeartrate), 0, 1920, 0, 1);
-
-  speedP1=int(minSpeed+map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 100-minSpeed));
-  speedP2=int(minSpeed+map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 100-minSpeed));
-
-  /*throttleP1=int(map(mouseY, 0, 1080, 100, 0));
-  throttleP2=30;*/
-}
-
-void drawDiagrams() {
-  stroke(92, 219, 134);
-  strokeWeight(20);
-  strokeCap(PROJECT);
-  noFill();
-  if (heartrateP1>maxHeartrate) stroke(249, 87, 103);
-  else stroke(92, 219, 134);
-  arc(580, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP1/100f));
-
-  if (heartrateP2>maxHeartrate) stroke(249, 87, 103);
-  else stroke(92, 219, 134);
-  arc(1770, 292, 162, 162, PI/2, PI/2+(PI*2)*(trottleP2/100f));
-  noStroke();
-
-
-  if (heartrateP1>maxHeartrate) fill(249, 87, 103);
-  else fill(92, 219, 134);
-  rect(182, 422, map(constrain(heartrateP1, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 22);
-  rect(182, 458, map(speedP1, 0, 100, 0, 196), 22);
-
-  if (heartrateP2>maxHeartrate) fill(249, 87, 103);
-  else fill(92, 219, 134);
-  rect(1590, 422, map(constrain(heartrateP2, minHeartrate, maxHeartrate), minHeartrate, maxHeartrate, 0, 196), 21);
-  rect(1590, 458, map(speedP2, 0, 100, 0, 196), 21);
-
-  textAlign(LEFT);
-  fill(255);
-  textFont(firaRegular24);
-  text(heartrateP1, 405,442);
-  text(int(speedP1)+"%", 405,478);
-  text(heartrateP2, 1806, 442);
-  text(int(speedP2)+"%", 1806, 478);
-
-  textAlign(RIGHT);
-  textFont(firaRegular36);
-  text(int(trottleP1)+"%", 602, 304);  // was 653, 320  -- -51   -16
-  text(int(trottleP2)+"%", 1814, 320);
-
-  // show gimmicks for to high and to low heartrates
-
-  // low heartrate
-  if (heartrateP1<minHeartrate) {
-    if ((millis()/500)%2>0) image(assets[0], 760, 222);
-    else image(assets[1], 760, 222);
+  if (heartrateP1<minHeartrate) {                                        // low heartrate player 1
+    if ((millis()/500)%2>0) image(assets[0], 683, 206);                  // display animation picture
+    else image(assets[1], 683, 206);                                     // display animation picture
   }
-  if (heartrateP2<minHeartrate) {
-    if ((millis()/500)%2>0) image(assets[0], 990, 222);
-    else image(assets[1], 990, 222);
+  if (heartrateP2<minHeartrate) {                                        // low heartrate player 2
+    if ((millis()/500)%2>0) image(assets[0], 1072, 206);                 // display animation picture
+    else image(assets[1], 1072, 206);                                    // display animation picture
   }
   // high heartrate
-  if (heartrateP1>maxHeartrate) {
-    if ((millis()/200)%2>0) image(assets[2], 760, 222);
+  if (heartrateP1>maxHeartrate) {                                        // high heartrate player 1          
+    if ((millis()/200)%2>0) image(assets[2], 685, 206);                  // display animation picture            
   }
-  if (heartrateP2>maxHeartrate) {
-    if ((millis()/200)%2>0) image(assets[2], 990, 222);
+  if (heartrateP2>maxHeartrate) {                                        // high heartrate player 2
+    if ((millis()/200)%2>0) image(assets[2], 1065, 206);                 // display animation picture
   }
 }
 

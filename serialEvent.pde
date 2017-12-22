@@ -43,16 +43,18 @@ void serialEvent(Serial port) {
         speedP1=int(inData);                   // set speed of player
       } else if (inData.charAt(1) == '2') {    // 2 = player 2
         inData = inData.substring(3);          // cut off the leading 'XX='
-        speedP1=int(inData);                   // set speed of player
+        speedP2=int(inData);                   // set speed of player
       }
     }
 
     if (inData.charAt(0) == 'X') {             // P = bpm, T = trottle, S = Car Speed, X = maximal possible Car speed 
       if (inData.charAt(1) == '1') {           // 1 = player 1
         inData = inData.substring(3);          // cut off the leading 'XX='
+        maxSpeedP1=int(map(float(inData),0,400,0,100));
         //heartrateP1=int(inData);             // set max speed of player
       } else if (inData.charAt(1) == '2') {    // 2 = player 2
         inData = inData.substring(3);          // cut off the leading 'XX='
+        maxSpeedP2=int(map(float(inData),0,400,0,100));
         //heartrateP2=int(inData);             // set max speed of player
       }
     }
