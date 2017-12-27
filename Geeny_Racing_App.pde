@@ -1,6 +1,5 @@
-// get video running again 
-// make name entering pretty
-// make hardware cleaner
+// get video running again
+// make name entering nice
 
 //import processing.video.*;
 import processing.serial.*;         // serial library lets us talk to Arduino
@@ -15,9 +14,10 @@ int BPM1 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
 int BPM2 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
 Serial port;  // the serial port
 
+
 // settings
-String player1Name="Rachael Rosen2";
-String player2Name="Rick Deckard2";
+String player1Name="Rachael Rosen";
+String player2Name="Rick Deckard";
 
 int lapsTotal=10;                   // number of maximal laps to go
 int maxHeartrate=150;               
@@ -200,6 +200,7 @@ void draw() {
     //valueSimulator();
     drawDiagrams();
     drawRacingTimes();
+    drawNames();
 
     if (currentLapP1>=lapsTotal) {
       winner=1;
@@ -222,6 +223,7 @@ void draw() {
     //valueSimulator();
     drawDiagrams();
     drawRacingTimes();
+    drawNames();
 
     if (raceoverScreenTimer+raceoverScreenTimeout<millis()) myState=5;
     //valueSimulator();

@@ -23,6 +23,15 @@ void drawHeartrates() {                                                // drawin
   }
 }
 
+void drawNames(){                                                      // showing names on racing screen
+  textFont(highscoreFont80);
+  textAlign(LEFT);
+  text(player1Name, 60, 123);                // show player 1 name
+
+  textAlign(RIGHT);
+  text(player2Name, 1870, 123);                // show player 2 name
+}
+
 void drawDiagrams() {                                                  // drawing diagrams of the racing screen
   //                                                                   // draw trottle arcs
   stroke(92, 219, 134);                                                  // formating
