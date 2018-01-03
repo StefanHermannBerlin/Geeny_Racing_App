@@ -6,7 +6,7 @@ import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
 //Movie movie;
 
-ControlP5 cp5;                      // object containing text fields for player names 
+ControlP5 cp5;                      // object containing text fields for player names
 int myState=10;                      // state machine (should be 10)
 
 // serial variables
@@ -20,7 +20,7 @@ String player1Name="Rachael Rosen";
 String player2Name="Rick Deckard";
 
 int lapsTotal=10;                   // number of maximal laps to go
-int maxHeartrate=150;               
+int maxHeartrate=150;
 int minHeartrate=60;
 int minSpeed=50;
 
@@ -54,7 +54,7 @@ String[] sektUrls = {"Winner Screen Copy 2.png", "Winner Screen Copy 3.png", "Wi
 String highscoreURL = "Highscore List.png";
 int assetNumber = 3;
 int sektNumber = 3;
-int imageNumber = 12;               // number of images 
+int imageNumber = 12;               // number of images
 int currentImage=0;                 // the image what is displayed in this very moment
 
 // styles
@@ -109,7 +109,6 @@ void setup() {
   //frame.setTitle("123 abc");
   printArray(Serial.list()); // output available serial ports
   port = new Serial(this, Serial.list()[7], 250000);
-
   // loading fonts
   highscoreFont36 = loadFont("HighscoreHero-36.vlw");
   highscoreFont48 = loadFont("HighscoreHero-48.vlw");
@@ -118,7 +117,7 @@ void setup() {
   highscoreFont144 = loadFont("HighscoreHero-144.vlw");
   firaRegular24 = loadFont("FiraSans-Regular-24.vlw");
   firaRegular36 = loadFont("FiraSans-Medium-36.vlw");
-
+  print("hello");
 
   cp5 = new ControlP5(this);                                                                         // holds the input elements for player names
   cp5.addTextfield("Player1").setPosition(20, 100).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 1
@@ -164,7 +163,7 @@ void draw() {
     myState=0;
     break;
 
-  case 0: // player screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** 
+  case 0: // player screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     image(images[0], 0, 0);
     textAlign(LEFT);
     fill(255);
@@ -236,7 +235,7 @@ void draw() {
     fill(255);                                                                                         // set color to white
     textFont(highscoreFont120);                                                                         // set font
     textAlign(LEFT);                                                                                   // align text to left
-    if (winner==1) {                                                                                   // if winner is Player 1        
+    if (winner==1) {                                                                                   // if winner is Player 1
       if (addedToHighscore==false) {                                                                   // if data was not entered to the highscore
         highscoreId=writeToTable(millis()-starttimeP1, player1Name, heartrateP1);                      // writing data into the highscore
         addedToHighscore=true;                                                                         // set flag it was written into
@@ -254,7 +253,7 @@ void draw() {
     image(sekt[0], (millis()-winnerScreenTimer)/60, -(millis()-winnerScreenTimer)/35);                 // animation of bottle
     image(sekt[1], (millis()-winnerScreenTimer)/61, -(millis()-winnerScreenTimer)/36);                 // animation of bottle
     image(sekt[2], (millis()-winnerScreenTimer)/72, -(millis()-winnerScreenTimer)/47);                 // animation of bottle
-    if (winnerScreenTimer+winnerScreenTimeout<millis()) myState=6;                                     // after timeout continue 
+    if (winnerScreenTimer+winnerScreenTimeout<millis()) myState=6;                                     // after timeout continue
     break;
   case 6: // prepare highscore screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     highscoreScreenTimer=millis();
@@ -294,7 +293,7 @@ void draw() {
   case 12: // enter player 2 name ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     image(images[9], 0, 0);                                                                            // background image
     cp5.get(Textfield.class, "Player1").setVisible(false);
-    cp5.get(Textfield.class, "Player2").setVisible(false);    
+    cp5.get(Textfield.class, "Player2").setVisible(false);
     cp5.get(Bang.class, "Submit").hide();
     if (player1Name.length()>18) player1Name=player1Name.substring(0, 18);                            // if name to long, cut
     if (player2Name.length()>18) player2Name=player2Name.substring(0, 18);                            // if name to long, cut
@@ -332,8 +331,8 @@ void keyPressed() {
     else if (myState==0) myState=11; // player 2 textfield go back
   }
 
-  if ((keyCode == 49)&&((myState==3)||(myState==4))) {                         // when key 1 is pressed, car 1 passed the counter   
-    if (currentLapP1<lapsTotal) {        
+  if ((keyCode == 49)&&((myState==3)||(myState==4))) {                         // when key 1 is pressed, car 1 passed the counter
+    if (currentLapP1<lapsTotal) {
       if (currentLapP1==0) {
         lapStarttimeP1=starttimeP1;
       }
@@ -344,7 +343,7 @@ void keyPressed() {
       lapStarttimeP1=millis();
     }
   } else if ((keyCode == 50)&&((myState==3)||(myState==4))) {                  // when key 2 is pressed, car 1 passed the counter
-    if (currentLapP2<lapsTotal) {        
+    if (currentLapP2<lapsTotal) {
       if (currentLapP2==0) {
         lapStarttimeP2=starttimeP2;
       }
