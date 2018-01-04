@@ -17,8 +17,8 @@ It is maded with Processing 3.3.6 (JAVA based)
 
 1. Generate an executable out of the Processing project.
 2. Run `bash switcher.sh`
-3. C-a switches to the animations
-4. C-g switches to the game
+3. Alt-a switches to the animations
+4. Alt-g switches to the game
 
 # Troubleshooting:
 
