@@ -1,7 +1,7 @@
 // get video running again
 // make name entering nice
 
-//import processing.video.*;
+import processing.video.*;
 import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
 //Movie movie;
@@ -101,14 +101,13 @@ boolean addedToHighscore = false;   // stores if the current race was already ad
 int highscoreId = 0;                // highscore table entry id of the current race
 int highscorePositionY=0;           // used to scroll the highscore up
 
-
 void setup() {
   fullScreen(2);
   // size(1920, 1080);
   // size(960, 540);
   //frame.setTitle("123 abc");
   printArray(Serial.list()); // output available serial ports
-  port = new Serial(this, Serial.list()[7], 250000);
+  //port = new Serial(this, Serial.list()[7], 250000);
   // loading fonts
   highscoreFont36 = loadFont("HighscoreHero-36.vlw");
   highscoreFont48 = loadFont("HighscoreHero-48.vlw");
@@ -117,7 +116,6 @@ void setup() {
   highscoreFont144 = loadFont("HighscoreHero-144.vlw");
   firaRegular24 = loadFont("FiraSans-Regular-24.vlw");
   firaRegular36 = loadFont("FiraSans-Medium-36.vlw");
-  print("hello");
 
   cp5 = new ControlP5(this);                                                                         // holds the input elements for player names
   cp5.addTextfield("Player1").setPosition(20, 100).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 1
@@ -144,10 +142,7 @@ void setup() {
   highscoreList=loadImage(highscoreURL);
   korken=loadImage("korken.png");
 
-  // Load and play the video in a loop
-  //movie = new Movie(this, "geenyAnimationK.mov");
-  //  movie = new Movie(this, "GeenyAnimationExample.mov");
-  //  movie.loop();
+  // Load and play the in a loop
 }
 
 void draw() {
