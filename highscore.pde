@@ -1,7 +1,7 @@
 
 void drawTable(int myId, int myPositionY) {
   Table savedTable;
-  savedTable = loadTable("highscore2.csv", "header");                                                            // load highscore table
+  savedTable = loadTable("highscore.csv", "header");                                                            // load highscore table
 
   int displayEntries=savedTable.getRowCount();                                                                   // get the total row number of the table
   if (displayEntries>20) displayEntries=20;                                                                      // if more then 20 entries, limit to 20 to display
@@ -36,7 +36,7 @@ void drawTable(int myId, int myPositionY) {
     textAlign(LEFT);
 
     if (result.getString(2).length()>18) text(result.getString(2).substring(0, 18), 570, 500+displayEntries*50+myPositionY);    // if name to long, cut
-    else text(result.getString(2).substring(0, 18), 570, 500+displayEntries*50+myPositionY);                                    // else just print it
+    else text(result.getString(2), 570, 500+displayEntries*50+myPositionY);                                                     // else just print it
 
 
     textAlign(RIGHT);
@@ -50,7 +50,7 @@ int writeToTable(long myTime, String myName, int myPulse) {        // method ret
   Table tempTable, savedTable;
 
   tempTable = new Table();
-  savedTable = loadTable("highscore2.csv", "header");             // load highscore table
+  savedTable = loadTable("highscore.csv", "header");             // load highscore table
 
   tempTable=savedTable;
 
@@ -62,7 +62,7 @@ int writeToTable(long myTime, String myName, int myPulse) {        // method ret
   newRow.setString("Name", myName);
   newRow.setInt("Heartrate", myPulse);
   tempTable.sort("Time");                                         // sort the table by time
-  saveTable(tempTable, "data/highscore2.csv");
+  saveTable(tempTable, "data/highscore.csv");
 
   return theId;
 }
