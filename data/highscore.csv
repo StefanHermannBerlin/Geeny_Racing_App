@@ -1,4 +1,6 @@
 Id,Time,Name,Heartrate
+31,10449,Player 1,66
+29,10884,Rachael Rosen,66
 28,44766,Rachael Rosen,76
 1,51000,Rachel Rosen,80
 2,52000,sam bell,80
@@ -10,11 +12,13 @@ Id,Time,Name,Heartrate
 14,58000,dominic cobb,80
 15,59000,buck rodgers,80
 16,60000,george taylor,80
+34,6087,Player 1,66
 17,61000,nada,80
 18,62000,tuck pendleton,80
 19,63000,kyle reese,80
 20,64000,john j adams,80
 21,65000,kevin flynn,80
+33,6538,Player 2,66
 22,66000,max rockatansky,80
 23,67000,thomas anderson,80
 24,68000,chris kelvin,80
@@ -28,3 +32,5 @@ Id,Time,Name,Heartrate
 32,76000,Flash Gordon,80
 33,77000,MacReady,80
 34,78000,The Doctor,80
+30,8533,Player 1,66
+32,8710,Player 2,66

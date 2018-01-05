@@ -1,20 +1,25 @@
-// make name entering nice
+// make name entering nice - Done!
 // put sound in (starting light, music, motors)
 // get video running again -> // path animations
 
 //import processing.video.*;
 import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
+import processing.sound.*;          // sound library for processing
 //Movie movie;
 
 ControlP5 cp5;                      // object containing text fields for player names 
-int myState=10;                      // state machine (should be 10)
+int myState=11;                     // state machine (should be 10)
 
 // serial variables
-int BPM1 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
-int BPM2 = 80;         // HOLDS HEART RATE VALUE FROM ARDUINO
-Serial port;  // the serial port
+int BPM1 = 80;                      // HOLDS HEART RATE VALUE FROM ARDUINO
+int BPM2 = 80;                      // HOLDS HEART RATE VALUE FROM ARDUINO
+Serial port;                        // the serial port
 
+// sound 
+SoundFile[] theSounds;
+AudioDevice device; 
+int numsounds = 4;        // Define the number of samples
 
 // settings
 String player1Name="Rachael Rosen";
@@ -85,6 +90,7 @@ long lapStarttimeP1 = 0;            // storing the millis passed until start pla
 long lapStarttimeP2 = 0;            // storing the millis passed until start player 2
 int winner=0;                       // winner 0 = no winner, winner 1 = player 1, winner 2 = player 2
 long countdownTimer=0;              // countdown timer
+int countdownNumber=0;              // countdownNumber goes from 0 to 5 for the Countdown
 long winnerScreenTimer=0;           // timer to show the winner screen
 int winnerScreenTimeout=4000;       // so long one should see the winner screen
 long highscoreScreenTimer=0;        // timer to show the highscore screen
@@ -120,11 +126,57 @@ void setup() {
   firaRegular24 = loadFont("FiraSans-Regular-24.vlw");
   firaRegular36 = loadFont("FiraSans-Medium-36.vlw");
 
+  device = new AudioDevice(this, 48000, 32);      // the audio device
+  theSounds = new SoundFile[numsounds];
+
+  theSounds[0] = new SoundFile(this, "bleep1.wav");        // loading sound files
+  theSounds[1] = new SoundFile(this, "bleep2.wav");        // loading sound files
+  theSounds[2] = new SoundFile(this, "racingSounds.wav");  // loading sound files
+  theSounds[3] = new SoundFile(this, "racingSounds.wav");  // loading sound files
 
   cp5 = new ControlP5(this);                                                                         // holds the input elements for player names
-  cp5.addTextfield("Player1").setPosition(20, 100).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 1
-  cp5.addTextfield("Player2").setPosition(20, 170).setSize(200, 40).setAutoClear(false).hide();      // text field for player name 2
-  cp5.addBang("Submit").setPosition(240, 170).setSize(80, 40).hide();                                // submit button
+  cp5.addTextfield("Player1")
+    .setPosition(120, 545)
+    .setFont(highscoreFont48)
+    .setColorBackground(0)
+    .setSize(700, 100)
+    .setColorForeground(color(100, 100, 100, 255))
+    .setColorActive(color(91, 189, 134, 255))
+    .setAutoClear(false)
+    .hide();      // text field for player name 1
+  cp5.addTextfield("Player2")
+    .setPosition(1100, 545)
+    .setFont(highscoreFont48)
+    .setColorBackground(0)
+    .setSize(700, 100)
+    .setColorForeground(color(100, 100, 100, 255))
+    .setColorActive(color(91, 189, 134, 255))
+    .setAutoClear(false)
+    .hide();      // text field for player name 2
+
+  cp5.addButton("Submit")
+    .setPosition(820, 750)
+    .setFont(highscoreFont48)
+    .setSize(290, 120)
+    .setLabel("Go! >>>")
+    .setColorBackground(color(100, 100, 100, 155))
+    .setColorForeground(color(91, 189, 134, 255))
+    .hide();                                // submit button
+
+
+  /*textAlign(LEFT);
+   fill(255);
+   noStroke();
+   textFont(highscoreFont144);
+   if (true) {
+   if (player1NamePositionX>0) player1NamePositionX-=30;
+   if (player2NamePositionX>0) player2NamePositionX-=30;
+   }
+   text(player1Name, 142+player1NamePositionX, 442);
+   textAlign(RIGHT);
+   text(player2Name, 1865-player2NamePositionX, 830);*/
+
+
 
   // loading images
   for (int i=0; i<imageNumber; i++) {
@@ -160,7 +212,7 @@ void draw() {
     player2NamePositionX=1000;         // player screen animation helper variable
     cp5.get(Textfield.class, "Player1").setVisible(false);
     cp5.get(Textfield.class, "Player2").setVisible(false);
-    cp5.get(Bang.class, "Submit").hide();
+    cp5.get(Button.class, "Submit").hide();
     addedToHighscore = false;
     myState=0;
     break;
@@ -182,20 +234,35 @@ void draw() {
     break;
   case 1: // setting stage for countdown ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     countdownTimer=millis();
+    countdownNumber=0;
+    theSounds[0].play(1.0, 1.0);                                        // play sound 
     myState=2;
     break;
   case 2: // countdown ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
-    if (int((millis()-countdownTimer)/1000)>5) {     // hier gehört 1000 rein !!! *************
-      winner=0;                                    // winner 0 = no winner, winner 1 = player 1, winner 2 = player 2
+    if (millis()-countdownTimer>1000) {
+      countdownNumber++;
+      countdownTimer=millis();
+      if (countdownNumber<5) theSounds[0].play(1.0, 1.0);              // play sound
+      else if (countdownNumber==5) {
+        theSounds[1].play(1.0, 1.0);        // play sound
+        //startRacingSounds();                                            // racing sounds started
+      }
+    }
+
+    image(images[countdownNumber+1], 0, 0);    
+
+    if (countdownNumber==6) {                         // race started
+      winner=0;                                       // winner 0 = no winner, winner 1 = player 1, winner 2 = player 2
       starttimeP1=millis();
       starttimeP2=starttimeP1;
       myState=3;
     }
-    image(images[int((millis()-countdownTimer)/1000)+1], 0, 0);
+
     break;
   case 3: // racing screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     background(0);
     drawHeartrates();
+    //updateRacingSounds();
     image(images[7], 0, 0);
     //mouseHelper();
     //valueSimulator();
@@ -231,11 +298,12 @@ void draw() {
     drawDiagrams();
     drawRacingTimes();
     winnerScreenTimer=millis();
+    //stopRacingSounds();                                                                                // racing sounds get stopped
     break;
   case 5: // winner screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     image(images[8], 0, 0);                                                                            // background image
     fill(255);                                                                                         // set color to white
-    textFont(highscoreFont120);                                                                         // set font
+    textFont(highscoreFont120);                                                                        // set font
     textAlign(LEFT);                                                                                   // align text to left
     if (winner==1) {                                                                                   // if winner is Player 1        
       if (addedToHighscore==false) {                                                                   // if data was not entered to the highscore
@@ -287,16 +355,16 @@ void draw() {
     resetData();
     break;
   case 11: // enter player 1 name ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
-    image(images[9], 0, 0);                                                                            // background image
+    image(images[0], 0, 0);                                                                            // background image
     cp5.get(Textfield.class, "Player1").setVisible(true);
     cp5.get(Textfield.class, "Player2").setVisible(true);
-    cp5.get(Bang.class, "Submit").show();
+    cp5.get(Button.class, "Submit").show();
     break;
   case 12: // enter player 2 name ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     image(images[9], 0, 0);                                                                            // background image
     cp5.get(Textfield.class, "Player1").setVisible(false);
     cp5.get(Textfield.class, "Player2").setVisible(false);    
-    cp5.get(Bang.class, "Submit").hide();
+    cp5.get(Button.class, "Submit").hide();
     if (player1Name.length()>18) player1Name=player1Name.substring(0, 18);                            // if name to long, cut
     if (player2Name.length()>18) player2Name=player2Name.substring(0, 18);                            // if name to long, cut
     myState=-1;                                                                                       // goto versus screen
@@ -323,8 +391,8 @@ void keyPressed() {
   //println(key);
   if (key == ENTER) {
     if (myState==0) myState=1;
-    else if (myState==7) myState=-1;
-    else if (myState==9) myState=-1;
+    else if (myState==7) myState=11;
+    else if (myState==9) myState=11;
     else if (myState==10) myState=11;
     //else if (myState==11) myState=12; // player textfields
     else if (myState==13) myState=-1;  // show both player names
@@ -378,8 +446,13 @@ void resetData() {
 
 void Submit() {
   print("the following text was submitted :");
+
   player1Name = cp5.get(Textfield.class, "Player1").getText();
   player2Name = cp5.get(Textfield.class, "Player2").getText();
+
+  if (player1Name.length()<=1) player1Name="Player 1";
+  if (player2Name.length()<=1) player2Name="Player 2";
+
   print(" textInput 1 = " + player1Name);
   print(" textInput 2 = " + player2Name);
   println();

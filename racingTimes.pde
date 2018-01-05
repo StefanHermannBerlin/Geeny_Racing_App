@@ -86,6 +86,22 @@ void drawDiagrams() {                                                  // drawin
   }
 }
 
+void startRacingSounds(){
+    theSounds[2].loop();
+    theSounds[3].loop();
+    theSounds[3].rate(1.3);
+}
+
+void updateRacingSounds(){
+    theSounds[2].amp(map(mouseY, 0, height, 0.0, 1.0));
+    theSounds[3].amp(map(mouseX, 0, width, 0.0, 1.0));
+}
+
+void stopRacingSounds(){
+    theSounds[2].stop();
+    theSounds[3].stop();
+}
+
 void drawRacingTimes() {
   for (int i=0; i<10; i++) {
     textFont(highscoreFont36);
