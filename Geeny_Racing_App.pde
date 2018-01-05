@@ -1,5 +1,6 @@
-// get video running again
 // make name entering nice
+// put sound in (starting light, music, motors)
+// get video running again -> // path animations
 
 //import processing.video.*;
 import processing.serial.*;         // serial library lets us talk to Arduino
