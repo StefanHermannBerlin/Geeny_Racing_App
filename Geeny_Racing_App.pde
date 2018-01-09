@@ -6,10 +6,9 @@
 import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
 import processing.sound.*;          // sound library for processing
-//Movie movie;
 
 ControlP5 cp5;                      // object containing text fields for player names 
-int myState=11;                     // state machine (should be 10)
+int myState=10;                     // state machine (should be 10)
 
 // serial variables
 int BPM1 = 80;                      // HOLDS HEART RATE VALUE FROM ARDUINO
@@ -111,6 +110,7 @@ int highscorePositionY=0;           // used to scroll the highscore up
 
 void setup() {
   fullScreen(2);
+  //size(200, 200, P2D);
   // size(1920, 1080);
   // size(960, 540);
   //frame.setTitle("123 abc");
@@ -199,9 +199,8 @@ void setup() {
   korken=loadImage("korken.png");
 
   // Load and play the video in a loop
-  //movie = new Movie(this, "geenyAnimationK.mov");
-  //  movie = new Movie(this, "GeenyAnimationExample.mov");
-  //  movie.loop();
+//  video = new GLMovie(this, "GeenyAnimation2.mov");
+//  video.loop();
 }
 
 void draw() {
@@ -215,6 +214,7 @@ void draw() {
     cp5.get(Button.class, "Submit").hide();
     addedToHighscore = false;
     myState=0;
+    resetData();
     break;
 
   case 0: // player screen ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** 
@@ -440,9 +440,6 @@ void resetData() {
   currentLapP2=0;
 }
 
-/*void movieEvent(Movie m) {
- m.read();
- }*/
 
 void Submit() {
   print("the following text was submitted :");
