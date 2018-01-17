@@ -115,7 +115,7 @@ void setup() {
   // size(960, 540);
   //frame.setTitle("123 abc");
   printArray(Serial.list()); // output available serial ports
-  port = new Serial(this, Serial.list()[7], 250000);
+  port = new Serial(this, Serial.list()[7], 115200);
 
   // loading fonts
   highscoreFont36 = loadFont("HighscoreHero-36.vlw");
