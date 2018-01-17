@@ -7,13 +7,8 @@ import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
 import processing.sound.*;          // sound library for processing
 
-<<<<<<< HEAD
 ControlP5 cp5;                      // object containing text fields for player names 
 int myState=10;                     // state machine (should be 10)
-=======
-ControlP5 cp5;                      // object containing text fields for player names
-int myState=10;                      // state machine (should be 10)
->>>>>>> readme-fixes
 
 // serial variables
 int BPM1 = 80;                      // HOLDS HEART RATE VALUE FROM ARDUINO
@@ -114,17 +109,11 @@ int highscorePositionY=0;           // used to scroll the highscore up
 
 void setup() {
   fullScreen(2);
-  //size(200, 200, P2D);
   // size(1920, 1080);
   // size(960, 540);
-  //frame.setTitle("123 abc");
   printArray(Serial.list()); // output available serial ports
-<<<<<<< HEAD
-  port = new Serial(this, Serial.list()[7], 115200);
+  port = new Serial(this, Serial.list()[7], 115200);            // adjust to the Arduino port!!!
 
-=======
-  //port = new Serial(this, Serial.list()[7], 250000);
->>>>>>> readme-fixes
   // loading fonts
   highscoreFont36 = loadFont("HighscoreHero-36.vlw");
   highscoreFont48 = loadFont("HighscoreHero-48.vlw");
@@ -134,7 +123,6 @@ void setup() {
   firaRegular24 = loadFont("FiraSans-Regular-24.vlw");
   firaRegular36 = loadFont("FiraSans-Medium-36.vlw");
 
-<<<<<<< HEAD
   device = new AudioDevice(this, 48000, 32);      // the audio device
   theSounds = new SoundFile[numsounds];
 
@@ -143,8 +131,6 @@ void setup() {
   theSounds[2] = new SoundFile(this, "racingSounds.wav");  // loading sound files
   theSounds[3] = new SoundFile(this, "racingSounds.wav");  // loading sound files
 
-=======
->>>>>>> readme-fixes
   cp5 = new ControlP5(this);                                                                         // holds the input elements for player names
   cp5.addTextfield("Player1")
     .setPosition(120, 545)
@@ -208,14 +194,6 @@ void setup() {
   curveBGR=loadImage(curveBGRUrl);
   highscoreList=loadImage(highscoreURL);
   korken=loadImage("korken.png");
-
-<<<<<<< HEAD
-  // Load and play the video in a loop
-//  video = new GLMovie(this, "GeenyAnimation2.mov");
-//  video.loop();
-=======
-  // Load and play the in a loop
->>>>>>> readme-fixes
 }
 
 void draw() {
