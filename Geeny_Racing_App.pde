@@ -356,13 +356,11 @@ void draw() {
   case 12: // enter player 2 name ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** **** ***** **** *** ** * ** *** ****
     image(images[9], 0, 0);                                                                            // background image
     cp5.get(Textfield.class, "Player1").setVisible(false);
-<<<<<<< HEAD
+
     cp5.get(Textfield.class, "Player2").setVisible(false);    
     cp5.get(Button.class, "Submit").hide();
-=======
     cp5.get(Textfield.class, "Player2").setVisible(false);
     cp5.get(Bang.class, "Submit").hide();
->>>>>>> readme-fixes
     if (player1Name.length()>18) player1Name=player1Name.substring(0, 18);                            // if name to long, cut
     if (player2Name.length()>18) player2Name=player2Name.substring(0, 18);                            // if name to long, cut
     myState=-1;                                                                                       // goto versus screen
