@@ -1,8 +1,3 @@
-// make name entering nice - Done!
-// put sound in (starting light, music, motors)
-// get video running again -> // path animations
-
-import processing.video.*;
 import processing.serial.*;         // serial library lets us talk to Arduino
 import controlP5.*;                 // library to create input fields for player names
 import processing.sound.*;          // sound library for processing
